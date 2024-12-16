@@ -173,6 +173,16 @@ class FilesTable:
                 FileModel.model_validate(file)
                 for file in db.query(File).filter_by(user_id=user_id).all()
             ]
+        
+    def get_files_by_hash(self, hash: str, user_id: str = None) -> list[FileModel]:
+        with get_db() as db:
+            query = db.query(File).filter_by(hash=hash)
+            if user_id:
+                query = query.filter_by(user_id=user_id)
+            return [
+                FileModel.model_validate(file)
+                for file in query.all()
+            ]
 
     def update_file_hash_by_id(self, id: str, hash: str) -> Optional[FileModel]:
         with get_db() as db:

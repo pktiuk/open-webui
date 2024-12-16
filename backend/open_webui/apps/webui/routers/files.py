@@ -102,11 +102,17 @@ def upload_file(file: UploadFile = File(...), user=Depends(get_verified_user)):
 
 
 @router.get("/", response_model=list[FileModelResponse])
-async def list_files(user=Depends(get_verified_user)):
-    if user.role == "admin":
-        files = Files.get_files()
+async def list_files(user=Depends(get_verified_user), file_hash=None):
+    if file_hash:
+        user_id =None
+        if user.role != "admin":
+            user_id = user.id
+        files = Files.get_files_by_hash(file_hash, user_id)
     else:
-        files = Files.get_files_by_user_id(user.id)
+        if user.role == "admin":
+            files = Files.get_files()
+        else:
+            files = Files.get_files_by_user_id(user.id)
     return files
 
 
