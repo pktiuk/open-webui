@@ -19,7 +19,8 @@ class File(Base):
     __tablename__ = "file"
     id = Column(String, primary_key=True)
     user_id = Column(String)
-    hash = Column(Text, nullable=True)
+    hash = Column(Text, nullable=True, comment="Hash (sha256) from content string")
+    hash_file = Column(Text, nullable=True, comment="Hash calculated from the file itself")
 
     filename = Column(Text)
     path = Column(Text, nullable=True)
